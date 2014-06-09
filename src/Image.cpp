@@ -30,6 +30,7 @@ namespace euank {
         throw std::string(OpenImageIO::geterror());
       }
 
+      this->filename = filename;
       std::cout << "Read " << filename << ":" << std::endl;
       Image::PrintSpec(spec);
 
