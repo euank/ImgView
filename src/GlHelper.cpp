@@ -21,6 +21,7 @@ namespace euank {
       redChannel = true;
       greenChannel = true;
       blueChannel = true;
+      preserveAR = true;
       img = i;
 
       Init();
@@ -121,20 +122,21 @@ namespace euank {
       int leftOffset, topOffset, scaledWidth, scaledHeight;
       viewWidth = glutGet(GLUT_WINDOW_WIDTH);
       viewHeight = glutGet(GLUT_WINDOW_HEIGHT);
-      if(img.width <= viewWidth && img.height <= viewHeight) {
+      if(img.width <= viewWidth && img.height <= viewHeight && preserveAR) {
         scaledWidth = img.width;
         scaledHeight = img.height;
-      } else {
+      } else if(preserveAR){
         float aspectRatio = (float)img.width / (float)img.height;
         if(viewWidth * 1.0 / (float)viewHeight > aspectRatio) {
           scaledHeight =  viewHeight;
           scaledWidth = scaledHeight / (float)img.height  * img.width;
         } else {
-          leftOffset = 0;
           scaledWidth = viewWidth;
           scaledHeight = scaledWidth / (float)img.width * img.height;
         }
-
+      } else {
+        scaledWidth = viewWidth;
+        scaledHeight = viewHeight;
       }
 
       leftOffset = (viewWidth - scaledWidth)/2;
@@ -236,6 +238,9 @@ namespace euank {
         case 'w':
         case 'W':
           WriteImage();
+          break;
+        case 's':
+          preserveAR = !preserveAR;
           break;
       }
       glutPostRedisplay();

@@ -49,6 +49,8 @@ namespace euank {
         bool blueChannel;
         /** Display the green channel? */
         bool greenChannel;
+        /** Preserve aspect ratio? */
+        bool preserveAR;
 
         /** Name of file to write to */
         std::string outfile;
