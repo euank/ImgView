@@ -20,6 +20,11 @@ namespace euank {
       width = spec.width;
       height = spec.height;
       channels = spec.nchannels;
+
+      // This spec typically looks something like "RGBA" or "ARGB" or so on, so
+      // our channel format is a concatonation of them.  There are unusual
+      // formats that use multi-character strings here, and we're not dealing
+      // with that properly, but those those formats really are rare.
       for(std::vector<std::string>::const_iterator it = spec.channelnames.begin(); it != spec.channelnames.end(); it++) {
         channelFormat += *it;
       }
@@ -50,10 +55,13 @@ namespace euank {
         throw std::string(OpenImageIO::geterror());
       }
 
-      /* OpenImageIO docs say formats that don't support enough channels should silently write it with fewer channels
-       * than requested, but ppm does not do that. We override it in that case. hdr noisily fails, we push it a little
-       * closer to the OpenImageIO recommendations too. */
-      if((strcmp(out->format_name(), "pnm") == 0  || strcmp(out->format_name(), "hdr") == 0) && outChans == 4) {
+      /* OpenImageIO docs say formats that don't support enough channels should
+       * silently write it with fewer channels than requested, but ppm does not
+       * do that. We override it in that case. hdr noisily fails, we push it a
+       * little closer to the OpenImageIO recommendations too. */
+      if(outChans == 4
+          && (  strcmp(out->format_name(), "pnm") == 0
+             || strcmp(out->format_name(), "hdr") == 0)) {
         outChans = 3;
       }
       ImageSpec spec(xres, yres, outChans, TypeDesc::UINT8);
@@ -65,9 +73,10 @@ namespace euank {
         throw err;
       }
 
-      /* Write image from bottom up so it's not upside down. -scanline indicates this.
-       * Also use UINT8... turns out OpenImageIO magically converts it to something else if the format 
-       * thinks it should (see writing hdr; you get a float)
+      /* Write image from bottom up so it's not upside down. -scanline
+       * indicates this.  Also use UINT8... turns out OpenImageIO magically
+       * converts it to something else if the format thinks it should (see
+       * writing hdr; you get a float)
        */
       if(!out->write_image(TypeDesc::UINT8, (char *)data+(yres-1)*scanlinesize, chans, -scanlinesize, AutoStride) || !out->close()) {
         std::string err(out->geterror());
@@ -80,7 +89,7 @@ namespace euank {
       delete out;
     }
 
-    /** 
+    /**
      * Print information about an image
      *
      * Convenience function to print the width, height, channels (and names), and depth
@@ -122,6 +131,5 @@ namespace euank {
         }
         return type.c_str(); // use the name implied by type
       }
-
   }
 }
