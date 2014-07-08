@@ -8,3 +8,5 @@ add_executable(imgview imgview.cpp Image.cpp Image.hpp GlHelper.hpp GlHelper.cpp
 
 target_link_libraries(imgview ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OPENIMAGEIO_LIBRARY})
 
+install(TARGETS imgview
+        RUNTIME DESTINATION bin)
