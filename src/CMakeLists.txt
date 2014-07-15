@@ -4,7 +4,7 @@ find_package(OpenImageIO REQUIRED)
 
 include_directories(${OPENIMAGEIO_INCLUDE_DIR})
 
-add_executable(imgview imgview.cpp Image.cpp Image.hpp GlHelper.hpp GlHelper.cpp)
+add_executable(imgview imgview.cpp Image.cpp Image.hpp GlHelper.hpp GlHelper.cpp ImageConfig.cpp)
 
 target_link_libraries(imgview ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${OPENIMAGEIO_LIBRARY})
 

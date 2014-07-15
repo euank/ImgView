@@ -2,6 +2,7 @@
 #define EUANK_CPSC404_GLHELPER
 #include <iostream>
 #include "Image.hpp"
+#include "ImageConfig.hpp"
 #include <GL/gl.h>
 namespace euank {
   namespace cpsc404 {
@@ -21,39 +22,18 @@ namespace euank {
          * 
          * @param i The image to display
          */
-        GlHelper(Image i);
+        GlHelper(Image i, ImageConfig conf);
 
-        /**
-         * Set the filename to save to with GlHelper::Writeimage
-         * 
-         * @param filename The file to save to
-         */
-        void SetOutputFilename(std::string filename);
         /**
          * Starts the opngl loop, thus displaying the image and reacting to events
          */
         void Run();
-        /**
-         * Write out what OpenGL is currently displaying to the filename specified in GlHelper::SetOutputFilename
-         */
-        void WriteImage();
 
       private:
         /** Image passed in */
         Image img;
-        /** Invert the image? */
-        bool inverted;
-        /** Display the red channel? */
-        bool redChannel;
-        /** Display the blue channel? */
-        bool blueChannel;
-        /** Display the green channel? */
-        bool greenChannel;
-        /** Preserve aspect ratio? */
-        bool preserveAR;
 
-        /** Name of file to write to */
-        std::string outfile;
+        ImageConfig config;
 
         /** Texture id for the image 2d texture */
         GLuint texture;

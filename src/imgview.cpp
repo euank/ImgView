@@ -2,6 +2,7 @@
 #include <string> /* strerror */
 #include "Image.hpp"
 #include "GlHelper.hpp"
+#include "ImageConfig.hpp"
 
 /**
  * The main function
@@ -11,33 +12,27 @@
  * @return N/A, opengl's inifinite loop means this never returns.
  */
 int main(int argc, char **argv) {
-  /* Only support 1 or 2 arguments */
-  if(argc < 2 || argc > 3) {
-    std::cerr << "Usage:\n\t" << argv[0] << " <in> [<out>]\n" <<std::endl;
+  if(argc < 2) {
+    std::cerr << "Usage:\n\t" << argv[0] << " <img1> [<img2> ...] " << std::endl;
     return 1;
   }
 
-  euank::cpsc404::Image i;
+  euank::cpsc404::Image img;
+  euank::cpsc404::ImageConfig conf = euank::cpsc404::ImageConfig(argc, argv);
+
+
+//  conf = euank::cpsc404::ImageConfig(
 
   try {
-    i = euank::cpsc404::Image(argv[1]);
+    img = euank::cpsc404::Image(argv[1]);
   } catch(std::string message) {
     std::cerr << "Error loading file \"" << argv[1] << "\". " << message << std::endl;
     return errno; /* Fatal */
   }
 
-  euank::cpsc404::GlHelper gh = euank::cpsc404::GlHelper(i);
+  euank::cpsc404::GlHelper gh = euank::cpsc404::GlHelper(img, conf);
   std::string infile = std::string(argv[1]);
-  if(argc == 3) {
-    gh.SetOutputFilename(std::string(argv[2]));
-  } else {
-    std::string::size_type dotndx = infile.rfind('.');
-    if(dotndx == std::string::npos) {
-      gh.SetOutputFilename(infile + "_copy");
-    } else {
-      gh.SetOutputFilename(infile.substr(0, dotndx) + "_copy" + infile.substr(dotndx));
-    }
-  }
+
   gh.Run();
 
   return 0; /* Unreachable code ;_; */

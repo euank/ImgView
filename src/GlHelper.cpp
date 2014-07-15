@@ -8,6 +8,7 @@
 
 #include "GlHelper.hpp"
 #include "Image.hpp"
+#include "ImageConfig.hpp"
 
 /** Keycode for the escape key */
 #define ESCAPE_KEYCODE 27
@@ -16,35 +17,12 @@ namespace euank {
   namespace cpsc404 {
     GlHelper *GlHelper::staticHelper = NULL;
 
-    GlHelper::GlHelper(Image i) {
-      inverted = false;
-      redChannel = true;
-      greenChannel = true;
-      blueChannel = true;
-      preserveAR = true;
+    GlHelper::GlHelper(Image i, ImageConfig conf) {
       img = i;
 
+      config = conf;
+
       Init();
-    }
-
-    void GlHelper::SetOutputFilename(std::string filename) {
-      outfile = filename;
-    }
-
-    void GlHelper::WriteImage() {
-      int width, height, channels;
-      channels = img.channels;
-      width = glutGet(GLUT_WINDOW_WIDTH);
-      height = glutGet(GLUT_WINDOW_HEIGHT);
-
-      GLubyte *currentDisplay = (uint8_t *)malloc(width * height * channels);
-
-      glReadPixels(0, 0, width, height, glFormat, GL_UNSIGNED_BYTE, currentDisplay);
-      try {
-        Image::Write(outfile, currentDisplay, width, height, channels);
-      } catch(std::string message) {
-        std::cerr << "Unable to write file " << outfile << ". " << message << std::endl;
-      }
     }
 
     void GlHelper::Init() {
@@ -122,10 +100,10 @@ namespace euank {
       int leftOffset, topOffset, scaledWidth, scaledHeight;
       viewWidth = glutGet(GLUT_WINDOW_WIDTH);
       viewHeight = glutGet(GLUT_WINDOW_HEIGHT);
-      if(img.width <= viewWidth && img.height <= viewHeight && preserveAR) {
+      if(img.width <= viewWidth && img.height <= viewHeight && config.preserveAR) {
         scaledWidth = img.width;
         scaledHeight = img.height;
-      } else if(preserveAR){
+      } else if(config.preserveAR){
         float aspectRatio = (float)img.width / (float)img.height;
         if(viewWidth * 1.0 / (float)viewHeight > aspectRatio) {
           scaledHeight =  viewHeight;
@@ -144,7 +122,7 @@ namespace euank {
 
       /* Flip the texture-top and texture-bottom to invert it, no need
        * to fiddle with pixels */
-      if(inverted) {
+      if(config.inverted) {
         textureTop = 1, textureBottom = 0;
       } else {
         textureTop = 0, textureBottom = 1;
@@ -163,9 +141,9 @@ namespace euank {
       glBindTexture(GL_TEXTURE_2D, texture);
 
       /* Enable color masks if desired */
-      glColorMask(redChannel ? GL_TRUE : GL_FALSE,
-          greenChannel ? GL_TRUE : GL_FALSE,
-          blueChannel ? GL_TRUE : GL_FALSE,
+      glColorMask(config.redChannel ? GL_TRUE : GL_FALSE,
+          config.greenChannel ? GL_TRUE : GL_FALSE,
+          config.blueChannel ? GL_TRUE : GL_FALSE,
           GL_TRUE);
 
       glBegin(GL_QUADS);
@@ -209,38 +187,34 @@ namespace euank {
           exit(0);
         case 'i':
         case 'I':
-          inverted = !inverted;
+          config.inverted = !config.inverted;
           break;
         case 'r':
         case 'R':
-          redChannel = true;
-          greenChannel = false;
-          blueChannel= false;
+          config.redChannel = true;
+          config.greenChannel = false;
+          config.blueChannel= false;
           break;
         case 'g':
         case 'G':
-          redChannel = false;
-          greenChannel = true;
-          blueChannel= false;
+          config.redChannel = false;
+          config.greenChannel = true;
+          config.blueChannel= false;
           break;
         case 'b':
         case 'B':
-          redChannel = false;
-          greenChannel = false;
-          blueChannel= true;
+          config.redChannel = false;
+          config.greenChannel = false;
+          config.blueChannel= true;
           break;
         case 'o':
         case 'O':
-          redChannel = true;
-          greenChannel = true;
-          blueChannel= true;
-          break;
-        case 'w':
-        case 'W':
-          WriteImage();
+          config.redChannel = true;
+          config.greenChannel = true;
+          config.blueChannel= true;
           break;
         case 's':
-          preserveAR = !preserveAR;
+          config.preserveAR = !config.preserveAR;
           break;
       }
       glutPostRedisplay();
