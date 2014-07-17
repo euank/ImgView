@@ -216,6 +216,16 @@ namespace euank {
         case 's':
           config.preserveAR = !config.preserveAR;
           break;
+        case 'n':
+          config.current_image = (config.current_image + 1) % config.images.size();
+          img = config.images[config.current_image];
+          LoadTexture();
+          break;
+        case 'p':
+          config.current_image = (config.current_image - 1) % config.images.size();
+          img = config.images[config.current_image];
+          LoadTexture();
+          break;
       }
       glutPostRedisplay();
     }
