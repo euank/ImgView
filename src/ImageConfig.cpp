@@ -25,7 +25,7 @@ namespace euank {
       images = std::vector<std::string>();
 
       // Store each image listed on the command line
-      for(int i=0;i<argc;i++) {
+      for(int i=1;i<argc;i++) {
         images.push_back(std::string(argv[i]));
       }
       current_image = 0;

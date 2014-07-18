@@ -16,13 +16,13 @@ namespace euank {
       public:
         /**
          * Create a GlHelper with the given image.
-         * 
+         *
          * The given image will be loaded into a texture and
          * opengl will be initialized in preparation of running.
-         * 
+         *
          * @param i The image to display
          */
-        GlHelper(Image i, ImageConfig conf);
+        GlHelper(ImageConfig conf);
 
         /**
          * Starts the opngl loop, thus displaying the image and reacting to events
@@ -42,6 +42,7 @@ namespace euank {
 
         void Init();
         void LoadTexture();
+        void LoadImage();
         static void StaticKeypressHandler(unsigned char key, int x, int y);
         void KeypressHandler(unsigned char key, int x, int y);
 

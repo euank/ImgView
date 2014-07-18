@@ -17,20 +17,9 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  euank::cpsc404::Image img;
   euank::cpsc404::ImageConfig conf = euank::cpsc404::ImageConfig(argc, argv);
 
-
-//  conf = euank::cpsc404::ImageConfig(
-
-  try {
-    img = euank::cpsc404::Image(argv[1]);
-  } catch(std::string message) {
-    std::cerr << "Error loading file \"" << argv[1] << "\". " << message << std::endl;
-    return errno; /* Fatal */
-  }
-
-  euank::cpsc404::GlHelper gh = euank::cpsc404::GlHelper(img, conf);
+  euank::cpsc404::GlHelper gh = euank::cpsc404::GlHelper(conf);
   std::string infile = std::string(argv[1]);
 
   gh.Run();

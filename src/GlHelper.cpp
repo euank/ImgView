@@ -17,9 +17,7 @@ namespace euank {
   namespace cpsc404 {
     GlHelper *GlHelper::staticHelper = NULL;
 
-    GlHelper::GlHelper(Image i, ImageConfig conf) {
-      img = i;
-
+    GlHelper::GlHelper(ImageConfig conf) {
       config = conf;
 
       Init();
@@ -38,7 +36,13 @@ namespace euank {
       glEnable(GL_BLEND);
     }
 
+    void GlHelper::LoadImage() {
+      std::cerr << config.images[config.current_image] << "\n";
+      img = Image(config.images[config.current_image]);
+    }
+
     void GlHelper::LoadTexture() {
+      LoadImage();
       glEnable(GL_TEXTURE_2D);
 
       glGenTextures(1, &texture);
